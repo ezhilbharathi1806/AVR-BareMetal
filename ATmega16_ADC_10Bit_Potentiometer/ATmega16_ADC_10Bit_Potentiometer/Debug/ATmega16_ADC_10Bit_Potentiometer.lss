@@ -1,0 +1,179 @@
+
+ATmega16_ADC_10Bit_Potentiometer.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000e2  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000136  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000136  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000168  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000028  00000000  00000000  000001a4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000005d7  00000000  00000000  000001cc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000555  00000000  00000000  000007a3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000221  00000000  00000000  00000cf8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000048  00000000  00000000  00000f1c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000313  00000000  00000000  00000f64  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000049  00000000  00000000  00001277  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000018  00000000  00000000  000012c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 5d 00 	jmp	0xba	; 0xba <__vector_14>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 6f 00 	jmp	0xde	; 0xde <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+int main(void)
+{
+    /*============== ADC ==============*/
+	
+	//Enable the Global Interrupt Enable Bit
+	sei();
+  6c:	78 94       	sei
+	
+	//Set reference to NO AVCC and input to ADC0
+	ADMUX = 0x00;
+  6e:	17 b8       	out	0x07, r1	; 7
+	
+	//Enable ADC
+	ADCSRA |= (1<<ADEN)|(1<<ADATE);
+  70:	86 b1       	in	r24, 0x06	; 6
+  72:	80 6a       	ori	r24, 0xA0	; 160
+  74:	86 b9       	out	0x06, r24	; 6
+	
+	//Set frequency of ADC Conversion
+	ADCSRA |=(1<<ADPS2);
+  76:	86 b1       	in	r24, 0x06	; 6
+  78:	84 60       	ori	r24, 0x04	; 4
+  7a:	86 b9       	out	0x06, r24	; 6
+	ADCSRA &= (~(1<<ADPS1))& (~(1<<ADPS0));
+  7c:	86 b1       	in	r24, 0x06	; 6
+  7e:	8c 7f       	andi	r24, 0xFC	; 252
+  80:	86 b9       	out	0x06, r24	; 6
+	
+	//Start ADC conversion
+	ADCSRA |=(1<<ADSC);
+  82:	86 b1       	in	r24, 0x06	; 6
+  84:	80 64       	ori	r24, 0x40	; 64
+  86:	86 b9       	out	0x06, r24	; 6
+	
+	/*============== PWM ==============*/
+	//Set mode of timer
+	TCCR1A |= (1<<WGM10)|(1<<WGM11);
+  88:	8f b5       	in	r24, 0x2f	; 47
+  8a:	83 60       	ori	r24, 0x03	; 3
+  8c:	8f bd       	out	0x2f, r24	; 47
+	TCCR1B |=(1<<WGM12);
+  8e:	8e b5       	in	r24, 0x2e	; 46
+  90:	88 60       	ori	r24, 0x08	; 8
+  92:	8e bd       	out	0x2e, r24	; 46
+	TCCR1B &= ~(1<<WGM13);   // FAst PWM 10-Bit Mode
+  94:	8e b5       	in	r24, 0x2e	; 46
+  96:	8f 7e       	andi	r24, 0xEF	; 239
+  98:	8e bd       	out	0x2e, r24	; 46
+	
+	//Set PWM Mode
+	TCCR1A &= ~(1<<COM1A0);
+  9a:	8f b5       	in	r24, 0x2f	; 47
+  9c:	8f 7b       	andi	r24, 0xBF	; 191
+  9e:	8f bd       	out	0x2f, r24	; 47
+	TCCR1A |= (1<<COM1A1);   //PWM in Non-Inverting Mode
+  a0:	8f b5       	in	r24, 0x2f	; 47
+  a2:	80 68       	ori	r24, 0x80	; 128
+  a4:	8f bd       	out	0x2f, r24	; 47
+	
+	//Set Prescalar for the Timer
+	//16MHz/64 = 250KHz
+	TCCR1B |= (1<<CS10)|(1<<CS11);
+  a6:	8e b5       	in	r24, 0x2e	; 46
+  a8:	83 60       	ori	r24, 0x03	; 3
+  aa:	8e bd       	out	0x2e, r24	; 46
+	TCCR1B &= ~(1<<CS12); //prescalar = 64
+  ac:	8e b5       	in	r24, 0x2e	; 46
+  ae:	8b 7f       	andi	r24, 0xFB	; 251
+  b0:	8e bd       	out	0x2e, r24	; 46
+	
+	//Configuring OC1A pin As output pin
+	DDRD |= (1<<DDD5);
+  b2:	81 b3       	in	r24, 0x11	; 17
+  b4:	80 62       	ori	r24, 0x20	; 32
+  b6:	81 bb       	out	0x11, r24	; 17
+  b8:	ff cf       	rjmp	.-2      	; 0xb8 <main+0x4c>
+
+000000ba <__vector_14>:
+    while (1) 
+    {
+    }
+}
+
+ISR(ADC_vect){
+  ba:	1f 92       	push	r1
+  bc:	0f 92       	push	r0
+  be:	0f b6       	in	r0, 0x3f	; 63
+  c0:	0f 92       	push	r0
+  c2:	11 24       	eor	r1, r1
+  c4:	8f 93       	push	r24
+  c6:	9f 93       	push	r25
+	OCR1A=ADC;  //ADC register contains 10-Bit ADC value
+  c8:	84 b1       	in	r24, 0x04	; 4
+  ca:	95 b1       	in	r25, 0x05	; 5
+  cc:	9b bd       	out	0x2b, r25	; 43
+  ce:	8a bd       	out	0x2a, r24	; 42
+}
+  d0:	9f 91       	pop	r25
+  d2:	8f 91       	pop	r24
+  d4:	0f 90       	pop	r0
+  d6:	0f be       	out	0x3f, r0	; 63
+  d8:	0f 90       	pop	r0
+  da:	1f 90       	pop	r1
+  dc:	18 95       	reti
+
+000000de <_exit>:
+  de:	f8 94       	cli
+
+000000e0 <__stop_program>:
+  e0:	ff cf       	rjmp	.-2      	; 0xe0 <__stop_program>
