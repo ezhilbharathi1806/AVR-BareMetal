@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "author": "Ezhil Bharathi",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 58.2, "left": -39, "attrs": {} },
+    { "type": "wokwi-logic-analyzer", "id": "logic1", "top": -66.85, "left": 172.8, "attrs": {} }
+  ],
+  "connections": [
+    [ "logic1:GND", "uno:GND.1", "black", [ "h0" ] ],
+    [ "uno:1", "logic1:D0", "green", [ "v-28.8", "h-63", "v-86.4" ] ]
+  ],
+  "dependencies": {}
+}
